@@ -1,0 +1,411 @@
+<script>
+NOMBRE_SALA = 'Sala principal de reuniones';
+CALENDAR_ID = 
+  
+window.onload = function() {
+  // insertamos la informacion de la sala
+  $("#saleName").html(NOMBRE_SALA);
+  google.script.run.withSuccessHandler(answersListAllUser).withFailureHandler(onFailure).listAllUsers();
+  google.script.run.withSuccessHandler(returnListEvents).withFailureHandler(onFailure).getEventsCalendarByDay();
+  setInterval(refresh, 10000);
+  
+   
+  
+  // When the user clicks on the button, open the modal 
+  document.getElementById("btnOption").onclick = function() {
+    managerModal("mdlEventCreate","block")
+  }
+  
+  var span = document.getElementsByClassName("close")[0];
+  span.onclick = function() {
+    managerModal("mdlEventCreate","none")
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == document.getElementById("mdlEventCreate")) {
+     // managerModal("mdlEventCreate","none")
+    }
+  }
+
+  var options = { 
+  twentyFour: true,
+  title: 'Selector de horas', //The Wickedpicker's title, 
+  showSeconds: false, //Whether or not to show seconds, 
+  secondsInterval: 1, //Change interval for seconds, defaults to 1  , 
+  minutesInterval: 1, //Change interval for minutes, defaults to 1 
+  clearable: false, //Make the picker's input clearable (has clickable "x") 
+  };
+  $('.timepicker').wickedpicker(options);
+  
+  /*adicionamos el evento al formulario*/
+  
+  $("#frmCreateEvent").submit(function( event ) {
+   $(".sweet-overlay, .sweet-alert").remove();
+   swal("Creando Evento...");
+   $(".sa-confirm-button-container").remove()
+    google.script.run.withSuccessHandler(answersCreateEvent).withFailureHandler(onFailure).createEvent($( this ).serializeArray());
+    event.preventDefault();
+  });
+   $("#txtStartTime,#txtEndTime ").focus(function () {
+            $(".wickedpicker").hide();
+   });
+}
+
+function answersCreateEvent(data){
+  $(".sweet-overlay, .sweet-alert").remove();
+  if( data == "Evento creado satisfactoriamente"){
+    refresh();
+    managerModal("mdlEventCreate","none");
+    clearForm(document.getElementById("frmCreateEvent"))
+    swal("Notificación", data);
+    
+  }else{
+    swal({   title: "Notificación",   text: data,   type: "warning",   confirmButtonText: "Ok" });
+  } 
+  
+}
+
+function clearForm(oForm) {
+    
+  var elements = oForm.elements; 
+    
+  oForm.reset();
+
+  for(i=0; i<elements.length; i++) {
+      
+  field_type = elements[i].type.toLowerCase();
+  
+  switch(field_type) {
+  
+    case "text": 
+    case "password": 
+    case "textarea":
+          case "hidden":   
+      
+      elements[i].value = ""; 
+      break;
+        
+    case "radio":
+    case "checkbox":
+        if (elements[i].checked) {
+          elements[i].checked = false; 
+      }
+      break;
+
+    case "select-one":
+    case "select-multi":
+                elements[i].selectedIndex = -1;
+      break;
+
+    default: 
+      break;
+  }
+    }
+    
+ var tags = $('#txtUsersList').tagEditor('getTags')[0].tags;
+ for (var k = 0; k < tags.length; k++) { $('#txtUsersList').tagEditor('removeTag', tags[k]); }
+}
+
+function answersListAllUser(data){
+ $('#txtUsersList').tagEditor({
+    autocomplete: {
+        delay: 0, // show suggestions immediately
+        position: { collision: 'flip' }, // automatic menu position up/down
+        source: data
+    },
+    forceLowercase: true,
+    placeholder: 'Ingresa la lista de usuarios'
+});
+  
+}
+
+
+/*
+@desc: administra el modal 
+*/
+function managerModal(modalId,value){
+  document.getElementById(modalId).style.display = value;
+}
+
+function refresh() {
+  google.script.run.withSuccessHandler(returnListEvents).withFailureHandler(onFailure).getEventsCalendarByDay();
+
+}
+
+function returnRefresh(url) {
+  //console.log(url)
+  window.location.href = url;
+  // window.location.reload(true) 
+}
+/**
+ *@desc:    funcion de jquery que permite llamar a una funcion cada vez que se cambia el tamaño de la venta 
+ **/
+$(window).resize(function(event) {
+  resizableElements();
+});
+/**
+ *@desc:    funcion para redimensionar algunos componentes de la interfaz 
+ **/
+function resizableElements() {
+  //Obtenemos la altura y lo ancho de la pagina completa
+  var heightWindow = $(window).height();
+  var widthWindow = $(window).width();
+  // obtenemos el alto del div donde contiene la información de la sala
+  var heightPnlInformationSale = $(".pnlInformationSale").height();
+  // obtenemos la posicion en y donde el padre del div de información de la sala
+  var positionYPnlDetailsEvents = $(".pnlDetailsEvents").position().top;
+  // obtenemos el alto del div que esta en footer
+  var heightPnlFooter = $(".pnlFooter").height();
+  //definimos lo alto del panel de dettales de eventos y el panel de invitados
+  var heightDetails = (heightWindow - positionYPnlDetailsEvents) - heightPnlFooter - 14;
+  $(".pnlDetailsEvents").css("height", heightDetails);
+  $(".pnlDetailsGuests").css("height", heightDetails);
+  $(".pnlDetailsGuests").css("top", positionYPnlDetailsEvents);
+  //calculamos el Top
+  var topPnlInformationSale = heightWindow - heightPnlFooter - heightPnlInformationSale - 28;
+  // definimos la posición del div de la información de la sala con el fin de siempre quede encima de los detalles de los proximos eventos
+  // console.log(heightDetails);
+  // console.log(heightPnlInformationSale);
+  // console.log(topPnlInformationSale);
+  $(".pnlInformationSale").css("top", topPnlInformationSale);
+  var positionYpnlLineGreen= $(".pnlLineGreen").offset().top;
+  $(".pnlLineRed").css("top",positionYpnlLineGreen);
+}
+/**
+@name   returnListEvents
+@desc   Funcion que se ejecuta cuando se carga la interfaz 
+        
+@param  data {array}
+@return 
+@author Ruben Dario Sanchez Ramirez. (ruben.sanchez@sinova.co)
+@date   Junio 2016
+**/
+function returnListEvents(data) {
+  // console.log(data[0])
+  validateInformation(data[0]);
+  $("#descriptionSale").html(data[2]);
+  // hacemos referencia al footer
+  var pnlFooter = $(".pnlContentFooter");
+  if (data[1].length > 0)
+    pnlFooter.html( data[1]);
+  else
+    pnlFooter.html('<div class="pnlDetailsEventsNext"><span>No hay eventos próximos</div>');
+  // colocamos la fecha actual
+  $(".pnlTitleHour span").html(hourCurrent());
+  //llamamos la funcion para redimencionar los elelemntos
+  resizableElements()
+  //configuramos las lineas rojas
+  settingTimeLine(data[3])
+
+}
+
+/**
+@name   createDivsPhotos
+@desc   Funcion que con base a un array genera el HTML de invitados
+        
+@param  data {array}
+@return codigo HTML
+@author Ruben Dario Sanchez Ramirez. (ruben.sanchez@sinova.co)
+@date   Junio 2016
+**/
+function createDivsPhotos(data) {
+  // console.log(data)
+  var htmlOrganizer = '<div class="pnlPhoto"><img src="' + data[0][0] + '"><span>' + data[0][1] + '</span></div>';;
+  var htmlGuest = '';
+  for (var i = 1; i < data.length; i++) {
+    htmlGuest += '<div class="pnlPhoto"><img src="' + data[i][0] + '"><span>' + data[i][1] + '</span></div>';
+  }
+  return [htmlOrganizer,htmlGuest];
+}
+
+/**
+@name   validateInformation
+@desc   Funcion que con base a un array genera el HTML de invitados
+        
+@param  data {array}
+@return codigo HTML
+@author Ruben Dario Sanchez Ramirez. (ruben.sanchez@sinova.co)
+@date   Junio 2016
+**/
+function validateInformation(data) {
+// console.log(data)
+  var pnlTitleGuest = $(".pnlTitleGuest");
+  var pnlTitleOrganizer = $(".pnlTitleOrganizer");
+
+  // hacemos referencia a los campos que se van a configurar
+  var eventNameField = $(".pnlEventName");
+  var eventCurrentHourField = $("#pnlHourEvent");
+  var organizerField = $("#pnlOrganizer");
+  var guestsField = $("#pnlListGuest");
+  var pnlBackgroundField = $("#pnlBackground");
+  var stateField = $("#pnlState");
+  //Inicializamos las clases del fondo y el estado
+  stateField.removeClass("pnlState-red pnlState-green");
+  pnlBackgroundField.removeClass("pnlBackground-green pnlBackground-red");
+  //Ocultamos el titulo de invitados por defecto
+  pnlTitleGuest.hide();
+  pnlTitleOrganizer.hide();
+  if (data.length > 0) {
+    var hoursStartTemp = data[2].split(':');
+    var hoursEndTemp = data[3].split(':');
+    var hourStartEvent = new Date().setHours(hoursStartTemp[0], hoursStartTemp[1], 0, 0);
+    var hourEndEvent = new Date().setHours(hoursEndTemp[0], hoursEndTemp[1], 0, 0)
+    var stateText = "Disponible";
+    var stateClass = 'pnlState-green';
+    var classBackground = "pnlBackground-green";
+    var eventName = "";
+    var formatHoursAmPm = changeFormatterHours(data[2], 12) + ' a ' + changeFormatterHours(data[3], 12);
+    var eventHours = "<b>" + data[0] + "</b> iniciará de " + formatHoursAmPm;
+    var eventGuest = "";
+    var currentDate = new Date().getTime();
+
+    if (currentDate >= hourStartEvent && currentDate <= hourEndEvent) {
+      stateText = "Ocupado";
+      eventName = data[0];
+      stateClass = "pnlState-red";
+      eventHours = formatHoursAmPm;
+      classBackground = "pnlBackground-red";
+      // validamos si la cantidad de invitados es mayor que 0 para mostrar el titulo
+      if (data[4].length > 0) {
+        pnlTitleOrganizer.show();
+        eventGuest = createDivsPhotos(data[4]);
+        if( data[4].length >1)
+          pnlTitleGuest.show();
+      }
+    }
+
+    // Insertamos Informacion para cuando hay un evento en el momento
+    eventNameField.html(eventName);
+    eventCurrentHourField.html(eventHours);
+    guestsField.html(eventGuest[1]);
+    // console.log("Organizadores: "+data[4])
+    //alert(eventGuest)
+    organizerField.html(eventGuest[0]);
+    pnlBackgroundField.addClass(classBackground);
+    stateField.html(stateText);
+    stateField.addClass(stateClass);
+  } else {
+    // Insertamos Informacion cuando no hay eventos 
+    eventNameField.html("");
+    organizerField.html("");
+    eventCurrentHourField.html("");
+    guestsField.html("");
+    pnlBackgroundField.addClass("pnlBackground-green");
+    stateField.html("Disponible");
+    stateField.addClass("pnlState-green");
+  }
+}
+
+/**
+@name   changeFormatterHours1
+@desc   Convierte una hora en el formato que este como parametro
+        
+@param  hours {time}
+        format {number}: 12 || 24
+@return hora con nuevo formato
+@author Ruben Dario Sanchez Ramirez. (ruben.sanchez@sinova.co)
+@date   Junio 2016
+**/
+function changeFormatterHours(hours, format) {
+
+  var values = hours.split(':')
+  var hoursNew = '';
+  if (format == 12) {
+    var ident = 'AM'
+    if (values[0] >= 12) {
+      ident = 'PM'
+      // console.log('** ' + values[0])
+      if (values[0] > 12)
+        values[0] = values[0] - 12
+    }
+
+    if (String(values[0]).length == 1)
+      values[0] = '0' + values[0];
+    if (String(values[1]).length == 1)
+      values[1] = '0' + values[1];
+
+    hoursNew = values[0] + ':' + values[1] + ' ' + ident
+  } else {
+    var d = new Date("1/1/2013 " + hours);
+    hoursNew = d.getHours() + ':' + d.getMinutes();
+  }
+
+  return hoursNew;
+}
+
+function hourCurrent() {
+  var dateCurrent = new Date();
+  return changeFormatterHours(dateCurrent.getHours() + ':' + dateCurrent.getMinutes(), 12);
+}
+/**
+@name   settingTimeLine
+@desc   crea y configura todas las lineas rojas
+        
+@param  data {Matriz} : Matriz de datos
+@author Ruben Dario Sanchez Ramirez. (ruben.sanchez@sinova.co)
+@date   Junio 2016
+**/
+function settingTimeLine(data){
+  // obtenemos la posicion en y donde el padre del div de información de la sala
+  var positionYpnlLineGreen= $(".pnlLineGreen").offset().top;
+  $(".pnlLineRed").remove();
+  for (var i = 0; i < data.length; i++) {
+    var time = data[i];
+    var valuesElement = differenceCalculate(time);
+    $('#pnlContentLines').append('<div class="pnlLineRed" id="line'+i+'"></div>')
+    $("#line"+i).css("width",valuesElement[0]);
+    $("#line"+i).css("left",valuesElement[1]);
+
+  }
+  $(".pnlLineRed").css("top",positionYpnlLineGreen);
+
+}
+/**
+@name   differenceCalculate
+@desc   Configura la diferencia de cada line roja
+        
+@param  time {array} : Horas del evento inicio y final
+@author Ruben Dario Sanchez Ramirez. (ruben.sanchez@sinova.co)
+@date   Agosto 2016
+**/
+function differenceCalculate (time){
+  //obtenemos el ancho de la pagina 
+  var widthWindow = $(window).width();
+  // ontenemos un prodio del total del ancho de lapagina con base a las 12 separaciones
+  var averageHoursPx = parseFloat(widthWindow / 12);
+  // de acuerdo al promedio por cada porsion se divide en 60 que son los minutos
+  var averageMinutesPx = parseFloat(averageHoursPx / 60);
+  // se convierte la fecha de PM/AM a hora militar fecha inicial del evento
+  //var startTime24 =ConvertTimeformat("24",time[0]);
+  var startTime24 =time[0];
+  // se convierte la fecha de PM/AM a hora militar fecha final del evento
+  //var endTime24 =ConvertTimeformat("24",time[1]); 
+  var endTime24 = time[1]; 
+  // de acurdo a la hora militar se genera un array de 2 posiciones para almacenar en la primera la hora y en la segunda los minutos
+  var startTimeDetails = startTime24.split(":");
+  var endTimeDetails = endTime24.split(":");  
+  // convertimos en valor decimal la hora inicial
+  var startTimeDecimal = parseFloat(startTimeDetails[0]+"."+(startTimeDetails[1] * 100)/60);
+  // convertimos en valor decimal la hora inicial
+  var endTimeDecimal = parseFloat(endTimeDetails[0]+"."+(endTimeDetails[1] * 100)/60);
+  // con base al siguiente calculo se obtiene la posicion inicial de la linea
+  var startPositionLeft = averageHoursPx * (startTimeDecimal - 7) + 6;
+  // console.log("[ /s ] - ( /s )",startTimeDetails[1],endTimeDecimal)
+  //promedio en las 2 horas
+  var averageDecimal = endTimeDecimal - startTimeDecimal;
+  // console.log(averageDecimal)
+  // cpn base al siguinte calculo se obtiene el valor del anchodel la linea roja
+  var widthElement = (averageHoursPx) * averageDecimal;
+  return [widthElement,startPositionLeft];
+}
+
+/*
+@desc: Función encargada de mostrar un mensaje de error producido en el archivo Code.gs
+@params: {String} error: Error producido ejecutando alguna de las funciones del archivo Code.gs.
+*/
+function onFailure(error) {
+   $(".sweet-overlay, .sweet-alert").remove();
+   swal({   title: "Error!",   text: error.message,   type: "error",   confirmButtonText: "Ok" });
+}
+</script>

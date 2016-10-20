@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base target="_top">
+        <!-- Librerías Jquery  -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>     
+        <?!= include('Estilos'); ?>
+        <?!= include('jquery.tag-editor-js'); ?>
+        <?!= include('jquery.tag-editor-css'); ?>
+        <?!= include('JQuery.caret.min'); ?>
+        <?!= include('wickedpickerCss'); ?>
+        <?!= include('wickedpickerJs'); ?>
+        <?!= include('SweetAlertCss'); ?>
+        <?!= include('SweetAlertJs'); ?>
+        
+    </head>
+    <body>
+        <div id="pnlBackground" class="pnlBackground pnlBackground-green">
+        <div class="pnlTransparent"></div>
+          <div class="pnlBody">
+           
+          
+            <span class="btnOption" id="btnOption">Crear Evento</span>
+            <div class="pnlTitleHour"><span>00:00 PM</span></div>
+            <!-- panel de los detalles e invitados -->
+            <div class="pnlInformation">
+              <div class="pnlEventName"></div>
+              <!-- panel de los detalles de la parte izquierda -->
+              <div class="pnlDetailsEvents">
+                <div class="pnlEventsValues">
+                  <p id="pnlState" class="pnlState-red"></p>
+                  <p id="pnlHourEvent"></p>
+                </div>
+                <!-- panel para detalles -->                
+                <div class="pnlInformationSale">
+                  <p id="saleName"></p>
+                  <p id="descriptionSale"></p>
+                </div>
+              </div>
+              <!-- panel de los detalles de la parte derecha donde estan los invitados-->
+              <div class="pnlDetailsGuests">
+                 <div class="pnlTitleOrganizer" style="display:none">Organizador</div>
+                <div id="pnlOrganizer">
+                  
+                </div>
+                <div class="pnlTitleGuest" style="display:none">Lista de invitados</div>
+                <div id="pnlListGuest">
+                  
+                </div>
+              </div>              
+            </div>
+          </div>
+          <!-- footer-->
+          <div class="pnlFooter">    
+            <div class="pnlTimeline">
+              <div id="pnlContentLines">
+                <div class="pnlLineGreen"></div>
+                <div class="pnlLineRed"></div>
+                <div class="pnlLineRed"></div>
+              </div>
+              <table>
+                <tr class="pnlLineSeparate">
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+                  <td><div class="pnlSeparate"></div></td>
+
+                </tr>
+                <tr>
+                  <td><div class="pnlLine"></div>7AM</td>
+                  <td><div class="pnlLine"></div>8AM</td>
+                  <td><div class="pnlLine"></div>9AM</td>
+                  <td><div class="pnlLine"></div>10AM</td>
+                  <td><div class="pnlLine"></div>11AM</td>
+                  <td><div class="pnlLine"></div>12M</td>
+                  <td><div class="pnlLine"></div>1PM</td>
+                  <td><div class="pnlLine"></div>2PM</td>
+                  <td><div class="pnlLine"></div>3PM</td>
+                  <td><div class="pnlLine"></div>4PM</td>
+                  <td><div class="pnlLine"></div>5PM</td>
+                  <td><div class="pnlLine"></div>6PM</td>
+
+                </tr>
+              </table>
+            </div>
+            <!-- contenido de los proximos eventos-->
+            <h3 style="padding-left:7px;color:#fff;font-size:1.3em;" >Próximos Eventos:</h3>
+            <div class="pnlContentFooter">
+            </div>
+            <!-- modal con el formulario -->
+           <div id="mdlEventCreate" class="modal">
+           
+             <!-- Contenido del modal -->
+             <div class="modal-content">
+               <div class="modal-header">
+                 <span class="close">×</span>
+                 <h2>Formulario</h2>
+               </div>
+               <div class="modal-body">
+                 <div class="form-style-2">
+                   <div class="form-style-2-heading">Creación de eventos</div>
+                     <form action="javascrit:void(0)" id="frmCreateEvent" method="post">
+                        <label for="field1"><span>Nombre del solicitante <span class="required">*</span></span><input type="text" class="input-field" name="field1" value="" required/></label>
+                        <label for="field2"><span>Nombre del evento <span class="required">*</span></span><input type="text" class="input-field" name="field2" value="" required/></label>
+                        <label for="field2"><span>Hora inicial del evento <span class="required">*</span></span><input id="txtStartTime" type="text" class="input-field timepicker" name="field2" value="" required/></label>
+                        <label for="field2"><span>Hora final del evento <span class="required">*</span></span><input id="txtEndTime" type="text" class="input-field timepicker" name="field2" value="" required/></label>
+                        <label for="field2"><span>Invitados (correos electrónicos con autocompletar) <span class="required">*</span></span><textarea id="txtUsersList" name="field5" class="textarea-field" required></textarea></label>
+                        <label for="field5"><span>Descripción </span><textarea name="field5" style="padding:8px;" class="tag-editor"></textarea></label>
+                        <div style="text-align:right;padding-right: 3%;"><input type="submit" value="Crear Evento" /></div>
+                     </form>
+                   </div>
+               </div>
+             </div>
+           
+           </div>
+          </div>
+          
+        </div>
+        <?!= include('Funciones'); ?>
+    </body>
+</html>

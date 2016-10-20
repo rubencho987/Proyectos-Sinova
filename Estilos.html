@@ -1,0 +1,390 @@
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+ }
+ body{
+   font-family: sans-serif;
+}
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+ }
+
+.pnlBackground{
+	height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.pnlBackground-red{
+	background: #ee3f46;
+}
+
+.pnlBackground-green{
+	background: #00b0f2;
+}
+
+.pnlTransparent{
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 90%;
+    height: 100%;
+    top: 0;
+    left: 5%;
+    z-index: 1;
+    position: absolute;
+    background-repeat: repeat-x;
+    background-image: url("https://sites.google.com/a/sinova.co/repositorio/premex/salas%20de%20juntas.jpg");
+    background-size: cover;
+}
+.pnlBody{
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 90%;
+    height: 100%;
+    top: 0;
+    left: 5%;
+    right: 5%;
+    position: absolute;
+    
+}
+.pnlTitleHour{
+
+	text-align: right;
+    padding: 10px;
+}
+
+.pnlTitleHour span {
+    color: #FFF;
+    font-size: 5vw;
+    letter-spacing: 0;
+    padding-top: 20px;
+}
+
+.pnlFooter{
+    width: 100%;
+    display: inline-block;
+    background: #000;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    padding-bottom: 7px;
+    padding-top: 7px;
+}
+.pnlFooter .pnlDetailsEventsNext{
+	float: left;
+    color: #969696;
+    padding: 3px 8px;
+    width: 48%;
+    text-align: left;
+    font-size: 1.2vw;
+}
+.pnlFooter .pnlDetailsEventsNext span{
+	color: #f3eded;
+    font-weight: bold;
+    font-size: 1.4vw;
+}
+.pnlEventName{
+	width: 100%;
+    color: #FFF;
+    font-size: 4.4vw;
+    letter-spacing: 0;
+}
+.pnlInformation{
+	width: 100%;
+	padding: 0px 1.6%;
+}
+.pnlInformation > .pnlDetailsEvents{
+	display: inline-block;
+	width: 59%;
+	padding-right: 7px;
+}
+.pnlInformation > .pnlDetailsGuests{
+	display: inline-block;
+	position: absolute;
+	width: 40%;
+}
+
+.pnlInformationSale{
+	position: absolute;
+    width: 56%;
+}
+.pnlInformationSale p:nth-child(1){
+	color: #FFF;
+    font-size: 2.5vw;
+    left: 25px;
+    letter-spacing: 0;
+}
+.pnlInformationSale p:nth-child(2){
+	color: #d0c9c9;
+    font-size: 1.4vw;
+    left: 25px;
+    letter-spacing: 0;
+    text-align: justify;
+	
+}
+.pnlEventsValues #pnlState{
+    font-weight: 300;
+    font-size: 2.9vw;
+}
+.pnlEventsValues .pnlState-green{
+    color: #00b0f2;
+}
+.pnlEventsValues .pnlState-red{
+    color: #ee3f46;
+}
+.pnlEventsValues #pnlHourEvent{
+    color: #FFF;
+    font-size: 1.9vw;
+    letter-spacing: 0;
+}
+.pnlTitleGuest, .pnlTitleOrganizer{
+	text-align: center;
+    font-size: 1.4vw;
+    border-bottom: 1px solid #fff;
+    color: #fff;
+}
+.pnlPhoto{
+	min-width: 105px;
+    width: 48%;
+    display: inline-block;
+    height: 85px;
+    padding: 5px;
+    margin-right: 2px;
+}
+.pnlPhoto img{
+	width: 22%;
+    /*height: 60px;*/
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+.pnlPhoto span:nth-child(2){
+    position: relative;
+    padding-left: 5px;
+    top: -27%;
+    font-size: 1vw;
+    color: #fff;
+}
+.pnlPhoto span:nth-child(3){
+	position: relative;
+    top: -27px;
+    display: table;
+    left: 65px;
+    font-size: 11px;
+    color: #bbc511;
+}
+.pnlTimeline{
+
+    width: 100%;
+}
+.pnlTimeline table{
+
+    width: 100%;
+}
+.pnlTimeline table .pnlLineSeparate td{
+
+    width: 8.333333%;
+    text-align: center;
+}
+.pnlTimeline table tr td{
+    width: 8.333333%;
+    color: #fff;
+}
+.pnlSeparate{
+    width: 2px;
+    height: 10px;
+    background: #fff;
+    position: relative;
+    left: 4px;
+}
+.pnlLineGreen{
+    width: 99%;
+    position: relative;
+    left: 6px;
+    height: 4px;
+    background: #00b0f2;
+    display: inline-block;
+}
+.pnlLineRed{
+    width: 10%;
+    position: fixed;
+    left: 4px;
+    height: 4px;
+    background: #ee3f46;
+    top: -8px;
+}
+
+/*Estilos botones*/
+.btnOption{
+    border: 2px solid #fff;
+    color: #fff;
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 2px;
+    position: fixed;
+    margin: 7px;
+}
+
+.btnOption:hover,.btnOption:focus{
+  background: rgba(255,255,255,.3);
+ }
+ 
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 2%; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+    color: #545454;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #f5f5f5;
+    color: #545454;
+}
+.modal-header h2{
+     display: block;
+    font-size: 1.5em;
+    -webkit-margin-before: 0.83em;
+    -webkit-margin-after: 0.83em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: bold;
+}
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/*Inputs*/
+.form-style-2{
+    padding: 20px 12px 10px 20px;
+    font: 13px Arial, Helvetica, sans-serif;
+}
+.form-style-2 form{width: 100%;}
+.form-style-2-heading{
+    font-weight: bold;
+    font-style: italic;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+    font-size: 15px;
+    padding-bottom: 3px;
+}
+.form-style-2 label{
+    display: inline-block;
+    margin: 0px 0px 15px 0px;
+    width: 49%;
+}
+.form-style-2 label > span{
+    font-weight: bold;
+    display: block;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-bottom: 3px;
+}
+.form-style-2 span.required{
+    color:red;
+}
+.form-style-2 .tel-number-field{
+    width: 40px;
+    text-align: center;
+}
+.form-style-2 input.input-field{
+    width: 48%;
+    
+}
+
+.form-style-2 input.input-field, 
+.form-style-2 .tel-number-field, 
+.form-style-2 .textarea-field, 
+ .form-style-2 .select-field{
+    padding: 7px;
+    width: 97%;
+    border: 1px solid #ccc;
+    outline: none;
+}
+.form-style-2 .input-field:focus, 
+.form-style-2 .tel-number-field:focus, 
+.form-style-2 .textarea-field:focus,  
+.form-style-2 .select-field:focus{
+    border: 1px solid #0C0;
+}
+.form-style-2 .textarea-field{
+    height:100px;
+    width: 97%;
+}
+.form-style-2 input[type=submit],
+.form-style-2 input[type=button]{
+    padding: 6px;
+    font-size: 1.1vw;
+    background: transparent;
+    color: #00b0f2;
+    border: 1px solid #00b0f2;
+}
+.form-style-2 input[type=submit]:hover,
+.form-style-2 input[type=button]:hover{
+    background: #00b0f2;
+    cursor: pointer;
+    color: #fff;
+}
+</style>
