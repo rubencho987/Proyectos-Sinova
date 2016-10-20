@@ -1,5 +1,5 @@
 /*VARIABLES GLOBALES*/
-
+//jojoo
 //Nombre del Recurso: Sala de Eventos 001
 IDRESOURCE = 'sinova.co_2d3438333733343132343132@resource.calendar.google.com'; 
 NOMBRE_SALA = 'Sala principal de reuniones';
